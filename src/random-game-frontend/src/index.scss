@@ -1,37 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 body {
-  font-family: sans-serif;
-  font-size: 1.5rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: #ffffff;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-img {
-  max-width: 50vw;
-  max-height: 25vw;
-  display: block;
-  margin: auto;
+.game-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #5d5dff 0%, #8257e6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+    }
+  }
+  
+  .game-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem auto;
+    width: 400px;
+    max-width: 600px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .game-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      
+      .form-group {
+        .form-label {
+          display: block;
+          font-size: 1.2rem;
+          font-weight: 500;
+          color: #fff;
+          margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+          width: calc(100% - 2.5rem);
+          padding: 0.8rem 1.2rem;
+          border-radius: 12px;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.05);
+          color: #fff;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+          
+          &:focus {
+            outline: none;
+            border-color: #5d5dff;
+            box-shadow: 0 0 0 3px rgba(93, 93, 255, 0.25);
+          }
+        }
+      }
+      
+      .submit-button {
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        background: linear-gradient(135deg, #5d5dff 0%, #8257e6 100%);
+        color: white;
+        margin-top: 1rem;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(93, 93, 255, 0.3);
+        }
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none;
+        }
+      }
+    }
+    
+    .result-message {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      
+      &.success {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+      
+      &.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+      }
+      
+      .trophy-icon {
+        color: #FFD700;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+    }
+  }
 }
 
-form {
+@media (max-width: 768px) {
+  .game-container {
+    padding: 1rem;
+    
+    .game-card {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+    
+    .header h1 {
+      font-size: 2rem;
+    }
+  }
+}
+
+main {
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  gap: 0.5em;
-  flex-flow: row wrap;
-  max-width: 40vw;
-  margin: auto;
-  align-items: baseline;
+  flex-direction: column;
 }
 
-button[type="submit"] {
-  padding: 5px 20px;
-  margin: 10px auto;
-  float: right;
+.game-container {
+  flex: 1;
 }
 
-#greeting {
-  margin: 10px auto;
-  padding: 10px 60px;
-  border: 1px solid #222;
+.footer {
+  margin-top: auto;
+  padding: 20px;
+  text-align: center;
+}
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-#greeting:empty {
-  display: none;
+.auth-section {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auth-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.principal-text {
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.auth-button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.login {
+    background: linear-gradient(135deg, #5d5dff 0%, #8257e6 100%);
+    color: white;
+    width: 100%;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(93, 93, 255, 0.3);
+    }
+  }
+
+  &.logout {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+.submit-button {
+  &:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+.footer {
+  margin-top: auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.footer-logo {
+  max-width: 150px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 1;
+  }
 }
