@@ -2,41 +2,38 @@ import Debug "mo:base/Debug";
 import Time "mo:base/Time";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
+import Text "mo:base/Text";
 
-actor RandomGame {
-    // Generate a pseudo-random number between 1 and 100
-    private func generateRandomNumber() : Nat {
+actor ColorGame {
+    // Generate a random number between 0 and 2 for color choice
+    private func generateRandomIndex() : Nat {
         let timestamp = Int.abs(Time.now());
-        ((timestamp % 100) + 1)
+        (timestamp % 3)
     };
 
-    public func playGame(userGuess : Nat) : async {
+    public func playGame(userChoice : Nat) : async {
         won: Bool;
         message: Text;
     } {
-        let targetNumber = generateRandomNumber();
+        let correctIndex = generateRandomIndex();
         
-        if (userGuess < 1 or userGuess > 100) {
+        if (userChoice < 0 or userChoice > 2) {
             return {
                 won = false;
-                message = "Please guess a number between 1 and 100!";
+                message = "Invalid color choice!";
             };
         };
 
-        if (userGuess == targetNumber) {
+        if (userChoice == correctIndex) {
             return {
                 won = true;
-                message = "🎉 Congratulations! You guessed the correct number: " # Nat.toText(targetNumber);
+                message = "🎉 Congratulations! You picked the correct color!";
             };
         };
 
         return {
             won = false;
-            message = if (userGuess < targetNumber) {
-                "Try higher! Your guess was too low."
-            } else {
-                "Try lower! Your guess was too high."
-            };
+            message = "Wrong choice! Try again!";
         };
     };
 };

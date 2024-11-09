@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthClient } from "@dfinity/auth-client";
 import { random_game_backend } from 'declarations/random-game-backend';
 
-function App() {
-  const [userGuess, setUserGuess] = useState('');
+const ColorGame = () => {
+  const [colors, setColors] = useState([]);
   const [gameResult, setGameResult] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -51,8 +51,16 @@ function App() {
     setGameResult(null);
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const generateRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  const startNewGame = () => {
     if (!isAuthenticated) {
       setGameResult({
         won: false,
@@ -61,28 +69,49 @@ function App() {
       return;
     }
 
+    const newColors = [
+      generateRandomColor(),
+      generateRandomColor(),
+      generateRandomColor()
+    ];
+    setColors(newColors);
+    setGameResult(null);
     setIsPlaying(true);
+  };
+
+  const handleColorChoice = async (index) => {
+    if (!isAuthenticated) return;
     
+    setIsPlaying(true);
     try {
-      const result = await random_game_backend.playGame(Number(userGuess));
-      setGameResult(result);
+      const result = await random_game_backend.playGame(index + 1);
+      
+      if (result.won) {
+        setGameResult({
+          won: true,
+          message: `🎉 Congratulations! You picked the correct color: ${colors[index]}`,
+        });
+      } else {
+        setGameResult({
+          won: false,
+          message: "Wrong choice! Try again!"
+        });
+      }
     } catch (error) {
-      setGameResult({ 
-        won: false, 
-        message: "Error playing game. Please try again." 
+      setGameResult({
+        won: false,
+        message: "Error playing game. Please try again."
       });
     }
-    
     setIsPlaying(false);
-    setUserGuess('');
   };
 
   return (
     <main className="app-container">
       <div className="game-container">
         <div className="header">
-          <h1>Random Game</h1>
-          <p>Guess a number between 1 and 100</p>
+          <h1>Color Guessing Game</h1>
+          <p>Pick the color you think is correct!</p>
         </div>
 
         <div className="game-card">
@@ -101,36 +130,41 @@ function App() {
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="game-form">
-            <div className="form-group">
-              <label htmlFor="guess" className="form-label">
-                Enter your guess:
-              </label>
-              <input
-                id="guess"
-                type="number"
-                min="1"
-                max="100"
-                value={userGuess}
-                onChange={(e) => setUserGuess(e.target.value)}
-                className="form-input"
-                required
-              />
-            </div>
+          {isAuthenticated && (
+            <div className="game-content">
+              {!isPlaying || colors.length === 0 ? (
+                <button 
+                  onClick={startNewGame} 
+                  className="submit-button"
+                >
+                  Start New Game
+                </button>
+              ) : (
+                <div className="color-choices">
+                  {colors.map((color, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleColorChoice(index)}
+                      className="color-choice"
+                      style={{
+                        backgroundColor: color,
+                        width: '80px',
+                        height: '80px',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'transform 0.2s'
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
 
-            <button
-              type="submit"
-              disabled={isPlaying || !isAuthenticated}
-              className="submit-button"
-            >
-              {!isAuthenticated ? 'Login to Play' : isPlaying ? 'Playing...' : 'Play Game'}
-            </button>
-          </form>
-
-          {gameResult && (
-            <div className={`result-message ${gameResult.won ? 'success' : 'error'}`}>
-              {gameResult.won}
-              <p>{gameResult.message}</p>
+              {gameResult && (
+                <div className={`result-message ${gameResult.won ? 'success' : 'error'}`}>
+                  <p>{gameResult.message}</p>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -141,6 +175,6 @@ function App() {
       </div>
     </main>
   );
-}
+};
 
-export default App;
+export default ColorGame;
