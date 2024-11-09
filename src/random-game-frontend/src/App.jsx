@@ -9,6 +9,7 @@ const ColorGame = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authClient, setAuthClient] = useState(null);
   const [principal, setPrincipal] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     initAuth();
@@ -83,28 +84,31 @@ const ColorGame = () => {
     if (!isAuthenticated) return;
     
     setIsPlaying(true);
+    setLoading(true);
     try {
-      const result = await random_game_backend.playGame(index + 1);
-      
-      if (result.won) {
-        setGameResult({
-          won: true,
-          message: `🎉 Congratulations! You picked the correct color: ${colors[index]}`,
-        });
-      } else {
-        setGameResult({
-          won: false,
-          message: "Wrong choice! Try again!"
-        });
-      }
+        const result = await random_game_backend.playGame(index + 1);
+        setLoading(false);
+        
+        if (result.won) {
+            setGameResult({
+                won: true,
+                message: `🎉 Congratulations! You picked the correct color: ${colors[index]}`,
+            });
+        } else {
+            setGameResult({
+                won: false,
+                message: result.message
+            });
+        }
     } catch (error) {
-      setGameResult({
-        won: false,
-        message: "Error playing game. Please try again."
-      });
+      setLoading(false);
+        setGameResult({
+            won: false,
+            message: "Error playing game. Please try again."
+        });
     }
     setIsPlaying(false);
-  };
+};
 
   return (
     <main className="app-container">
@@ -139,9 +143,10 @@ const ColorGame = () => {
                 >
                   Start New Game
                 </button>
+                
               ) : (
                 <div className="color-choices">
-                  {colors.map((color, index) => (
+                  {!loading && colors.map((color, index) => (
                     <button
                       key={index}
                       onClick={() => handleColorChoice(index)}
@@ -157,6 +162,9 @@ const ColorGame = () => {
                       }}
                     />
                   ))}
+                  {loading && (
+                    <div className="loader" />
+                  )}
                 </div>
               )}
 
@@ -173,6 +181,7 @@ const ColorGame = () => {
       <div className="footer">
         <img src="/logo2.svg" alt="DFINITY logo" className="footer-logo" />
       </div>
+
     </main>
   );
 };
